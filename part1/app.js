@@ -125,6 +125,30 @@ let db;
         ((SELECT user_id FROM Users WHERE username = 'souljaboy'), 'Crank', 'medium')
       `);
     }
+
+    [rows] = await db.execute('SELECT COUNT(*) AS count FROM WalkRequests');
+    if (rows[0].count === 0) {
+      await db.execute(`
+        INSERT INTO WalkRequests(dog_id, requested_time, duration_minutes, location, status) VALUES
+        ((SELECT dog_id FROM Dogs WHERE name = 'Max'), '2025-06-10 08:00:00', 30, 'Parklands', 'open'),
+        ((SELECT dog_id FROM Dogs WHERE name = 'Bella'), '2025-06-10 09:30:00', 45, 'Beachside Ave', 'accepted'),
+        ((SELECT dog_id FROM Dogs WHERE name = 'Okara'), '2025-06-20 09:00:00', 40, 'Beach', 'completed'),
+        ((SELECT dog_id FROM Dogs WHERE name = 'Torus'), '2025-06-20 10:00:00', 30, 'Dog Park', 'open'),
+        ((SELECT dog_id FROM Dogs WHERE name = 'Crank'), '2025-06-10 08:00:00', 30, 'Town', 'cancelled')
+      `);
+    }
+
+    [rows] = await db.execute('SELECT COUNT(*) AS count FROM WalkRatings');
+    if (rows[0].count === 0) {
+      await db.execute(`
+        INSERT INTO WalkRatings(dog_id, requested_time, duration_minutes, location, status) VALUES
+        ((SELECT dog_id FROM Dogs WHERE name = 'Max'), '2025-06-10 08:00:00', 30, 'Parklands', 'open'),
+        ((SELECT dog_id FROM Dogs WHERE name = 'Bella'), '2025-06-10 09:30:00', 45, 'Beachside Ave', 'accepted'),
+        ((SELECT dog_id FROM Dogs WHERE name = 'Okara'), '2025-06-20 09:00:00', 40, 'Beach', 'completed'),
+        ((SELECT dog_id FROM Dogs WHERE name = 'Torus'), '2025-06-20 10:00:00', 30, 'Dog Park', 'open'),
+        ((SELECT dog_id FROM Dogs WHERE name = 'Crank'), '2025-06-10 08:00:00', 30, 'Town', 'cancelled')
+      `);
+    }
   } catch (err) {
     console.error('Error setting up database: ', err);
   }
