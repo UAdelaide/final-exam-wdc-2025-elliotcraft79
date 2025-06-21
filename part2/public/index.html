@@ -29,9 +29,37 @@
     createApp({
       data() {
         return {
-          message: 'Welcome to the Dog Walking Service!'
+          message: 'Welcome to the Dog Walking Service!',
+          username: '',
+          password: ''
         };
+      },
+      methods: {
+        async submitLogin() {
+          this.error = '';
+          try {
+            const response = await fetch('/api/users/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                username: this.username,
+                password: this.password
+              })
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              if(data.user.role == 'walker') window.location.href = '/walker-dashboard.html';
+              else window.location.href = '/owner-dashboard.html';
+            }
+
+        } catch (err) {
+          this.error = err.message;
+        }
       }
+    }
     }).mount('#app');
   </script>
 
