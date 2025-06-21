@@ -191,7 +191,7 @@ app.get('/api/walkers/summary', async (req, res) => {
     // get all open walk requests
     const [summary] = await db.execute(`
       SELECT username AS walker_username, COUNT(rating) AS total_ratings,
-      AVG(rating) AS average_rating, COUNT(walker_id) AS completed_walks
+      ROUND(AVG(rating), 1) AS average_rating, COUNT(walker_id) AS completed_walks
       FROM Users LEFT JOIN WalkRatings ON user_id = walker_id
       WHERE role = 'walker'
       GROUP BY user_id
