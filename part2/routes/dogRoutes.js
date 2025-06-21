@@ -20,4 +20,19 @@ router.get('/mydogs', async (req, res) => {
   }
 });
 
+// GET a list of all dogs
+app.get('/', async (req, res) => {
+  try {
+    // get all the dogs
+    const [dogs] = await db.execute(`
+      SELECT name AS dog_name, size, username as owner_username
+      FROM Dogs INNER JOIN Users on owner_id = user_id
+    `);
+    res.json(dogs);
+  } catch (err) {
+    // something went wrong
+    res.status(500).json({ error: 'Failed to fetch dogs' });
+  }
+});
+
 module.exports = router;
