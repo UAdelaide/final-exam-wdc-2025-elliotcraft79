@@ -19,6 +19,29 @@
       <input v-model="password" type="password" id="password" class="form-control">
       <button type="submit" class="btn btn-primary">Log In</button>
     </form>
+    <div>
+      <h1>All Registered Dogs</h1>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Dog ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Size</th>
+            <th scope="col">Owner ID</th>
+            <th scope="col">Photo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="dog of dogs">
+            <td>{{dog.dog_id}}</td>
+            <td>{{dog.name}}</td>
+            <td>{{dog.size}}</td>
+            <td>{{dog.owner_id}}</td>
+            <td><img :src="dog.image"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script>
@@ -28,34 +51,45 @@
         return {
           message: 'Welcome to the Dog Walking Service!',
           username: '',
-          password: ''
+          password: '',
+          dogs: []
         };
       },
       methods: {
         async submitLogin() {
           this.error = '';
+          // send login request
+          const response = await fetch('/api/users/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              username: this.username,
+              password: this.password
+            })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            // redirect to appropriate dashboard
+            if (data.user.role == 'walker') window.location.href = '/walker-dashboard.html';
+            else window.location.href = '/owner-dashboard.html';
+          }
+        },
+        async function loadDogs() {
           try {
-            const response = await fetch('/api/users/login', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                username: this.username,
-                password: this.password
-              })
-            });
-
-            if (response.ok) {
-              const data = await response.json();
-              if(data.user.role == 'walker') window.location.href = '/walker-dashboard.html';
-              else window.location.href = '/owner-dashboard.html';
+            const res = await fetch('/api/dogs');
+            this.dogs = await res.json();
+            const imgRes = await fetch(`https://dog.ceo/api/breeds/image/random/${this.dogs.length}`);
+            let images = await imgRes.json();
+            for (let i = 0; i < this.dogs.length; i++) {
+              this.dogs[i].image = images.message[i];
             }
-
-        } catch (err) {
-          this.error = err.message;
+          } catch (err) {
+            error.value = 'Failed to load owned dogs';
+          }
         }
-      }
     }
     }).mount('#app');
   </script>
