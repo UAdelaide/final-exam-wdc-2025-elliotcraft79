@@ -185,6 +185,24 @@ app.get('/api/walkrequests/open', async (req, res) => {
   }
 });
 
+// GET a summary of all walkers
+app.get('/api/walkers/summary', async (req, res) => {
+  try {
+    // get all open walk requests
+    const [summary] = await db.execute(`
+      SELECT username AS walker_username, COUNT(rating) AS total_ratings,
+      AVG(rating) AS average_rating, COUNT(walker_id) AS completed_walks
+      FROM Users LEFT JOIN WalkRatings ON user_id = walker_id
+      WHERE role = 'walker'
+      GROUP BY user_id
+    `);
+    res.json(summary);
+  } catch (err) {
+    // something went wrong
+    res.status(500).json({ error: 'Failed to fetch walker summary' });
+  }
+});
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
