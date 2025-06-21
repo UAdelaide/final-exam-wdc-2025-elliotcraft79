@@ -36,7 +36,7 @@
     }
   }).mount('#app')
 
-  fetch("https://dog.ceo/api/breeds/image/random").then((res) => res.json()).then((json) => image = json.message);
+  fetch("https://dog.ceo/api/breeds/image/random").then((res) => res.json()).then((json) => console.log(json));
 </script>
 </body>
 </html>
