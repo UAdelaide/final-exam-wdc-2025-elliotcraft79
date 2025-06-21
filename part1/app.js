@@ -196,6 +196,7 @@ app.get('/api/walkers/summary', async (req, res) => {
       WHERE role = 'walker'
       GROUP BY user_id
     `);
+      console.log(typeof summary.average_rating);
     res.json(summary);
   } catch (err) {
     // something went wrong
