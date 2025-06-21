@@ -19,6 +19,8 @@
     <h1>Dog Walking App</h1>
     <div>
         <h2>Dog of the Day</h2>
+        <img v-if="image" :src="image">
+        <p v-else>Loading...</p>
     </div>
 </div>
 
@@ -28,6 +30,7 @@
   createApp({
     setup() {
       const image = ref(null)
+      fetch("https://dog.ceo/api/breeds/image/random").then((res) => res.json()).then((json) => image = json.message);
       return {
         image
       }
