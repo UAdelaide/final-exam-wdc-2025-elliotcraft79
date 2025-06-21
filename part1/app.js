@@ -35,7 +35,8 @@ let db;
       host: 'localhost',
       user: 'root',
       password: '',
-      database: 'DogWalkService'
+      database: 'DogWalkService',
+      decimalNumbers: true
     });
 
     // Create all the tables if they don't exist
