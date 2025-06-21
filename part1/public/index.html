@@ -24,10 +24,13 @@
         <h2>Dog of the Day</h2>
         <img v-if="image" :src="image">
         <p v-else>Loading...</p>
-    </div>
-    <div class="distance">
-        <p>Name: Rusty</p>
-        <p>Age: 3</p>
+        <button @click="loadNew">Load New</button>
+        <button>Delete your account</button>
+        <button>Forgot Password?</button>
+        <div class="distance">
+            <p>Name: Rusty</p>
+            <p>Age: 3</p>
+        </div>
     </div>
 </div>
 
@@ -38,7 +41,9 @@
     setup() {
       const image = ref(null)
 
-      fetch("https://dog.ceo/api/breeds/image/random").then((res) => res.json()).then((json) => image.value = json.message);
+      const loadNew = () => fetch("https://dog.ceo/api/breeds/image/random")
+          .then((res) => res.json())
+          .then((json) => image.value = json.message);
       return {
         image
       }
