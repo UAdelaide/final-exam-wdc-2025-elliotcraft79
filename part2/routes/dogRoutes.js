@@ -25,7 +25,8 @@ router.get('/', async (req, res) => {
   try {
     // get all the dogs
     const [dogs] = await db.execute(`
-      SELECT name AS dog_name, size, username as owner_username
+      SELECT name AS dog_name, size, username as owner_username,
+      dog_id, owner_id
       FROM Dogs INNER JOIN Users on owner_id = user_id
     `);
     res.json(dogs);
