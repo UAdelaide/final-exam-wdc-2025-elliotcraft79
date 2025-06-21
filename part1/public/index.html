@@ -44,6 +44,7 @@
       const loadNew = () => fetch("https://dog.ceo/api/breeds/image/random")
           .then((res) => res.json())
           .then((json) => image.value = json.message);
+      loadNew();
       return {
         image
       }
