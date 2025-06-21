@@ -21,7 +21,7 @@ router.get('/mydogs', async (req, res) => {
 });
 
 // GET a list of all dogs
-app.get('/', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     // get all the dogs
     const [dogs] = await db.execute(`
