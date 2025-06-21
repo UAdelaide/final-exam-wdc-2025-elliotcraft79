@@ -78,16 +78,12 @@
           }
         },
         async loadDogs() {
-          try {
-            const res = await fetch('/api/dogs');
-            this.dogs = await res.json();
-            const imgRes = await fetch(`https://dog.ceo/api/breeds/image/random/${this.dogs.length}`);
-            let images = await imgRes.json();
-            for (let i = 0; i < this.dogs.length; i++) {
-              this.dogs[i].image = images.message[i];
-            }
-          } catch (err) {
-            error.value = 'Failed to load owned dogs';
+          const res = await fetch('/api/dogs');
+          this.dogs = await res.json();
+          const imgRes = await fetch(`https://dog.ceo/api/breeds/image/random/${this.dogs.length}`);
+          let images = await imgRes.json();
+          for (let i = 0; i < this.dogs.length; i++) {
+            this.dogs[i].image = images.message[i];
           }
         }
       },
