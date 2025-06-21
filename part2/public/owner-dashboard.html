@@ -22,8 +22,10 @@
       <div class="card-body">
         <form @submit.prevent="submitWalkRequest">
           <div class="mb-3">
-            <label class="form-label">Dog ID</label>
-            <input v-model="form.dog_id" type="number" class="form-control" required>
+            <label class="form-label">Select Your Dog</label>
+            <select v-model="form.dog_id" class="form-control">
+
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Requested Date & Time</label>
@@ -80,6 +82,7 @@
         });
 
         const walks = ref([]);
+        const dogs = ref([]);
         const message = ref('');
         const error = ref('');
 
@@ -89,6 +92,15 @@
             walks.value = await res.json();
           } catch (err) {
             error.value = 'Failed to load walk requests';
+          }
+        }
+
+        async function loadDogs() {
+          try {
+            const res = await fetch('/api/dogs/mydogs');
+            dogs.value = await res.json();
+          } catch (err) {
+            error.value = 'Failed to load owned dogs';
           }
         }
 
