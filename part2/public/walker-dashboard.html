@@ -46,7 +46,7 @@
         const walks = ref([]);
         const message = ref('');
         const error = ref('');
-        const user = 3;
+        let user = 0;
 
         async function loadWalkRequests() {
           try {
@@ -77,8 +77,19 @@
           }
         }
 
+        async function getCurrentUser() {
+          try {
+            const res = await fetch('/api/users/me');
+            let data = await res.json();
+            user = data.user_id;
+          } catch (err) {
+            error.value = 'Failed to load current user info';
+          }
+        }
+
         onMounted(() => {
           loadWalkRequests();
+          getCurrentUser();
         });
 
         return {
