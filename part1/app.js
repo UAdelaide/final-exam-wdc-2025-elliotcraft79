@@ -189,7 +189,9 @@ app.get('/api/walkrequests/open', async (req, res) => {
 // GET a summary of all walkers
 app.get('/api/walkers/summary', async (req, res) => {
   try {
-    // get all open walk requests
+    // get the summary of all walkers
+    // note that the decimalNumbers option for mysql2 is enabled so that
+    // decimal numbers are actually returned as numbers and not strings
     const [summary] = await db.execute(`
       SELECT username AS walker_username, COUNT(rating) AS total_ratings,
       ROUND(AVG(rating), 1) AS average_rating, COUNT(walker_id) AS completed_walks
@@ -197,7 +199,6 @@ app.get('/api/walkers/summary', async (req, res) => {
       WHERE role = 'walker'
       GROUP BY user_id
     `);
-    console.log(typeof summary[0].average_rating);
     res.json(summary);
   } catch (err) {
     // something went wrong
