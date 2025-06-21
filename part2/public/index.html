@@ -13,10 +13,10 @@
     <h1 class="mb-4 text-primary">{{ message }}</h1>
     <p class="lead">Connect with trusted walkers for your beloved dog!</p>
     <form @submit.prevent="submitLogin">
-      <label for="username">Username:</label>
-      <input v-model="username" type="text" id="username">
-      <label for="password">Password:</label>
-      <input v-model="password" type="password" id="password">
+      <label for="username" class="form-label">Username:</label>
+      <input v-model="username" type="text" id="username" class="form-control">
+      <label for="password" class="form-label">Password:</label>
+      <input v-model="password" type="password" id="password" class="form-control">
       <button type="submit" class="btn btn-primary">Log In</button>
     </form>
 
