@@ -35,7 +35,7 @@ router.get('/me', (req, res) => {
   res.json(req.session.user);
 });
 
-// POST login (dummy version)
+// POST login
 router.post('/login', async (req, res) => {
   // get the username and password
   const { username, password } = req.body;
@@ -55,8 +55,7 @@ router.post('/login', async (req, res) => {
     // save the user's details to their session
     req.session.user = rows[0];
 
-    if(rows[0].role == 'owner') res.redirect('/owner-dashboard.html');
-    else res.redirect('/walker-dashboard.html');
+    res.json({ message: 'Login successful', user: rows[0] });
   } catch (error) {
     res.status(500).json({ error: 'Login failed' });
   }
