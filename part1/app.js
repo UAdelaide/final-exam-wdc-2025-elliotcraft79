@@ -156,11 +156,31 @@ let db;
 app.get('/api/dogs', async (req, res) => {
   try {
     // get all the dogs
-    const [dogs] = await db.execute('SELECT name AS dog_name, size, username as owner_username FROM Dogs INNER JOIN Users on owner_id = user_id');
+    const [dogs] = await db.execute(`
+      SELECT name AS dog_name, size, username as owner_username
+      FROM Dogs INNER JOIN Users on owner_id = user_id
+    `);
     res.json(dogs);
   } catch (err) {
     // something went wrong
     res.status(500).json({ error: 'Failed to fetch dogs' });
+  }
+});
+
+// GET a list of all open walk requests
+app.get('/api/walkrequests/open', async (req, res) => {
+  try {
+    // get all open walk requests
+    const [requests] = await db.execute(`
+      SELECT request_id, Dogs.name as dog_name, requested_time,
+      duration_minutes, location, username as owner_username
+      FROM (WalkRequests INNER JOIN Dogs ON WalkRequests.dog_id = Dogs.dog_id)
+      INNER JOIN Users ON Dogs.owner_id = Users.user_id
+    `);
+    res.json(requests);
+  } catch (err) {
+    // something went wrong
+    res.status(500).json({ error: 'Failed to fetch open walk requests' });
   }
 });
 
