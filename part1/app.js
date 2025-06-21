@@ -122,7 +122,7 @@ let db;
         ((SELECT user_id FROM Users WHERE username = 'carol123'), 'Bella', 'small'),
         ((SELECT user_id FROM Users WHERE username = 'elliot'), 'Okara', 'large'),
         ((SELECT user_id FROM Users WHERE username = 'elliot'), 'Torus', 'large'),
-        ((SELECT user_id FROM Users WHERE username = 'souljaboy'), 'Crank', 'medium')
+        ((SELECT user_id FROM Users WHERE username = 'alice123'), 'Scruffy', 'medium')
       `);
     }
 
@@ -134,19 +134,16 @@ let db;
         ((SELECT dog_id FROM Dogs WHERE name = 'Bella'), '2025-06-10 09:30:00', 45, 'Beachside Ave', 'accepted'),
         ((SELECT dog_id FROM Dogs WHERE name = 'Okara'), '2025-06-20 09:00:00', 40, 'Beach', 'completed'),
         ((SELECT dog_id FROM Dogs WHERE name = 'Torus'), '2025-06-20 10:00:00', 30, 'Dog Park', 'open'),
-        ((SELECT dog_id FROM Dogs WHERE name = 'Crank'), '2025-06-10 08:00:00', 30, 'Town', 'cancelled')
+        ((SELECT dog_id FROM Dogs WHERE name = 'Scruffy'), '2025-06-10 08:00:00', 30, 'Town', 'cancelled')
       `);
     }
 
     [rows] = await db.execute('SELECT COUNT(*) AS count FROM WalkRatings');
     if (rows[0].count === 0) {
       await db.execute(`
-        INSERT INTO WalkRatings(dog_id, requested_time, duration_minutes, location, status) VALUES
-        ((SELECT dog_id FROM Dogs WHERE name = 'Max'), '2025-06-10 08:00:00', 30, 'Parklands', 'open'),
-        ((SELECT dog_id FROM Dogs WHERE name = 'Bella'), '2025-06-10 09:30:00', 45, 'Beachside Ave', 'accepted'),
-        ((SELECT dog_id FROM Dogs WHERE name = 'Okara'), '2025-06-20 09:00:00', 40, 'Beach', 'completed'),
-        ((SELECT dog_id FROM Dogs WHERE name = 'Torus'), '2025-06-20 10:00:00', 30, 'Dog Park', 'open'),
-        ((SELECT dog_id FROM Dogs WHERE name = 'Crank'), '2025-06-10 08:00:00', 30, 'Town', 'cancelled')
+        INSERT INTO WalkRatings(request_id, walker_id, owner_id, rating, comments) VALUES
+        (1, 2, 1, 5, 'great'),
+        (2, 2, 3, 3, 'meh')
       `);
     }
   } catch (err) {
@@ -154,13 +151,15 @@ let db;
   }
 })();
 
-// Route to return books as JSON
-app.get('/', async (req, res) => {
+// GET a list of all dogs
+app.get('/api/dogs', async (req, res) => {
   try {
-    const [books] = await db.execute('SELECT * FROM books');
-    res.json(books);
+    // get all the dogs
+    const [dogs] = await db.execute('SELECT name AS dog_name, size, username as owner_username FROM Dogs INNER JOIN Users on owner_id = user_id');
+    res.json(dogs);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch books' });
+    // something went wrong
+    res.status(500).json({ error: 'Failed to fetch dogs' });
   }
 });
 
