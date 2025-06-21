@@ -31,7 +31,7 @@
     setup() {
       const image = ref(null)
 
-      fetch("https://dog.ceo/api/breeds/image/random").then((res) => res.json()).then((json) => image = json.message);
+      fetch("https://dog.ceo/api/breeds/image/random").then((res) => res.json()).then((json) => image.value = json.message);
       return {
         image
       }
