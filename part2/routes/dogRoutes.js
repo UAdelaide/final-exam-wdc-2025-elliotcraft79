@@ -14,7 +14,7 @@ router.get('/mydogs', async (req, res) => {
       WHERE owner_id = ?
     `, [req.session.user.user_id]);
 
-    res.json({ dogs: rows });
+    res.json(rows);
   } catch (error) {
     res.status(500).json({ error: 'Failed to get dogs' });
   }
