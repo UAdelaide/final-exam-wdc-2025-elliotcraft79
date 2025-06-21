@@ -77,7 +77,7 @@
             else window.location.href = '/owner-dashboard.html';
           }
         },
-        async function loadDogs() {
+        async loadDogs() {
           try {
             const res = await fetch('/api/dogs');
             this.dogs = await res.json();
